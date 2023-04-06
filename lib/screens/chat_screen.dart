@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talk_with_me_app/constants/constants.dart';
 import 'package:talk_with_me_app/models/chat_model.dart';
+import 'package:talk_with_me_app/providers/chat_provider.dart';
+import 'package:talk_with_me_app/providers/chat_provider.dart';
+import 'package:talk_with_me_app/providers/chat_provider.dart';
 import 'package:talk_with_me_app/providers/models_provider.dart';
 import 'package:talk_with_me_app/services/assets_manager.dart';
 // ignore: depend_on_referenced_packages
@@ -44,11 +47,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  List<ChatModel> chatList = [];
+  // List<ChatModel> chatList = [];
 
   @override
   Widget build(BuildContext context) {
     final modelsProvider = Provider.of<ModelsProvider>(context, listen: false);
+    final chatProvider = Provider.of<ChatProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -86,11 +90,14 @@ class _ChatScreenState extends State<ChatScreen> {
             Flexible(
               child: ListView.builder(
                   controller: _scrollControllerList,
-                  itemCount: chatList.length,
+                  itemCount: chatProvider.getCHatList.length,
+                  // chatList.length,
                   itemBuilder: (context, index) {
                     return ChatWidget(
-                      chatIndex: chatList[index].chatIndex,
-                      chatMsg: chatList[index].chatMsg,
+                      chatIndex: chatProvider.getCHatList[index]
+                          .chatIndex, // chatList[index].chatIndex,
+                      chatMsg: chatProvider.getCHatList[index].chatMsg,
+                      // chatList[index].chatMsg,
                     );
                   }),
             ),
@@ -115,7 +122,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     controller: textEditingController,
                     onSubmitted: (value) async {
-                      await sendMessageFCT(modelsProvider: modelsProvider);
+                      await sendMessageFCT(
+                          modelsProvider: modelsProvider,
+                          chatProvider: chatProvider);
                     },
                     decoration: const InputDecoration.collapsed(
                       hintText: "How can I help you",
@@ -126,7 +135,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   )),
                   IconButton(
                     onPressed: () async {
-                      await sendMessageFCT(modelsProvider: modelsProvider);
+                      await sendMessageFCT(
+                          modelsProvider: modelsProvider,
+                          chatProvider: chatProvider);
                     },
                     icon: const Icon(
                       Icons.send,
@@ -149,19 +160,26 @@ class _ChatScreenState extends State<ChatScreen> {
         curve: Curves.ease);
   }
 
-  Future<void> sendMessageFCT({required ModelsProvider modelsProvider}) async {
+  Future<void> sendMessageFCT(
+      {required ModelsProvider modelsProvider,
+      required ChatProvider chatProvider}) async {
     try {
       setState(() {
         _isTyping = true;
-        chatList
-            .add(ChatModel(chatMsg: textEditingController.text, chatIndex: 0));
+        // chatList
+        // .add(ChatModel(chatMsg: textEditingController.text, chatIndex: 0));
+        chatProvider.addUserMessage(msg: textEditingController.text);
         textEditingController.clear();
         focusNode.unfocus();
       });
-      chatList.addAll(await ApiService.sendMessage(
-        message: textEditingController.text,
-        modelId: modelsProvider.getCurrentModel,
-      ));
+      await chatProvider.sendMessageAndGetAnswers(
+        msg: textEditingController.text,
+        choosenModelId: modelsProvider.getCurrentModel,
+      );
+      // chatList.addAll(await ApiService.sendMessage(
+      //   message: textEditingController.text,
+      //   modelId: modelsProvider.getCurrentModel,
+      // ));
       setState(() {});
     } catch (error) {
       log("error $error");

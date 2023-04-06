@@ -7,6 +7,7 @@ import 'package:talk_with_me_app/widgets/text_widget.dart';
 class ChatWidget extends StatelessWidget {
   final String chatMsg;
   final int chatIndex;
+
   const ChatWidget({super.key, required this.chatMsg, required this.chatIndex});
 
   @override
