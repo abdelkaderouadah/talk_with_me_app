@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:talk_with_me_app/constants/constants.dart';
 import 'package:talk_with_me_app/services/assets_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:talk_with_me_app/widgets/chat_widget.dart';
+import 'package:talk_with_me_app/widgets/text_widget.dart';
+
+import '../services/api_service.dart';
+import '../services/services.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -51,7 +57,9 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await Services.showModalSheet(context: context);
+            },
             icon: const Icon(
               Icons.more_vert_rounded,
             ),
@@ -60,50 +68,58 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               child: ListView.builder(
-                  itemCount: 6,
+                  itemCount: 8,
                   itemBuilder: (context, index) {
-                    return const ChatWidget();
+                    return ChatWidget(
+                      chatIndex: int.parse(
+                          chatMessages[index]["chatIndex"].toString()),
+                      chatMsg: chatMessages[index]["chatMsg"].toString(),
+                    );
                   }),
             ),
             if (_isTyping) ...[
-              const SpinKitThreeBounce(
-                color: Colors.white,
-                size: 18,
-              ),
-              const SizedBox(height: 15),
               Material(
                 color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: TextField(
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        controller: textEditingController,
-                        onSubmitted: (value) {},
-                        decoration: const InputDecoration.collapsed(
-                          hintText: "How can I help you",
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.send,
-                          color: Colors.white,
+                child: const SpinKitThreeBounce(
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+              Material(
+                color: cardColor,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      controller: textEditingController,
+                      onSubmitted: (value) {},
+                      decoration: const InputDecoration.collapsed(
+                        hintText: "How can I help you",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
                         ),
                       ),
-                    ],
-                  ),
+                    )),
+                    IconButton(
+                      onPressed: () async {
+                        try {
+                          await ApiService.getModels();
+                        } catch (error) {
+                          print("error$error");
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: cardColor),
         scaffoldBackgroundColor: scaffoldBackgroundColor,
+        fontFamily: "Mulish",
       ),
       home: const ChatScreen(),
     );
