@@ -1,21 +1,14 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:talk_with_me_app/constants/constants.dart';
-import 'package:talk_with_me_app/models/chat_model.dart';
-import 'package:talk_with_me_app/providers/chat_provider.dart';
-import 'package:talk_with_me_app/providers/chat_provider.dart';
-import 'package:talk_with_me_app/providers/chat_provider.dart';
-import 'package:talk_with_me_app/providers/models_provider.dart';
-import 'package:talk_with_me_app/services/assets_manager.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:provider/provider.dart';
+import 'package:talk_with_me_app/constants/constants.dart';
+import 'package:talk_with_me_app/providers/chat_provider.dart';
+import 'package:talk_with_me_app/providers/models_provider.dart';
+import 'package:talk_with_me_app/services/services.dart';
 import 'package:talk_with_me_app/widgets/chat_widget.dart';
-// import 'package:talk_with_me_app/widgets/text_widget.dart';
-
-import '../services/api_service.dart';
-import '../services/services.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -58,10 +51,13 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            AssetsManager.appLogo,
-            height: 25,
-            width: 25,
+          child: IconButton(
+            onPressed: () async {
+              // show Profile of User
+            },
+            icon: const Icon(
+              Icons.ac_unit_outlined,
+            ),
           ),
         ),
         title: const Center(
@@ -115,21 +111,24 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   Expanded(
-                      child: TextField(
-                    focusNode: focusNode,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    controller: textEditingController,
-                    onSubmitted: (value) async {
-                      await sendMessageFCT(
-                          modelsProvider: modelsProvider,
-                          chatProvider: chatProvider);
-                    },
-                    decoration: const InputDecoration.collapsed(
-                      hintText: "How can I help you",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      focusNode: focusNode,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      controller: textEditingController,
+                      onSubmitted: (value) async {
+                        await sendMessageFCT(
+                            modelsProvider: modelsProvider,
+                            chatProvider: chatProvider);
+                      },
+                      decoration: const InputDecoration.collapsed(
+                        hintText: "How can I help you",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   )),

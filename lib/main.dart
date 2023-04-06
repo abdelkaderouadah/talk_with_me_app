@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import 'package:talk_with_me_app/constants/constants.dart';
 import 'package:talk_with_me_app/providers/chat_provider.dart';

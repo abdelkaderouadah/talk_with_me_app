@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 
 import 'package:talk_with_me_app/constants/constants.dart';
 import 'package:talk_with_me_app/providers/models_provider.dart';
-import 'package:talk_with_me_app/services/api_service.dart';
 import 'package:talk_with_me_app/widgets/text_widget.dart';
 
 import '../models/models_model.dart';
